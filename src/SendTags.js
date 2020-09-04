@@ -51,6 +51,9 @@ export default function SendTags (data) {
                     });
                 }
             }
+            updateSent(true);
+            //should update the recipients array in state with results of previous async function. 
+            updateRecipients(sendTo);
         })
         .catch(function (error) {
             // handle error
@@ -58,8 +61,6 @@ export default function SendTags (data) {
         })
         .then(function (results) {
             // always executed
-            updateSent(true);
-                updateRecipients(sendTo);
             console.log('boom');
         });
     }
