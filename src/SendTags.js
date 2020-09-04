@@ -38,40 +38,31 @@ export default function SendTags (data) {
                     return response.data.map(item=>{
                         let results = [];
                         let temp = item.tags.split(',');
-                        let flag = false;
-                        for(let i = 0; i < comparator.length; i++){
-                            if(temp.includes(comparator[i])){
-                                flag = true
+                        // let flag = false;
+                        for(let i = 0; i < temp.length; i++){
+                            if(item.tags.includes(temp[i])){
+                                // flag = true
+                                let recipient = `${item.firstName + ' ' + item.lastName}`;
+                                results.push(recipient);
+                                console.log('res',results);
                             }
                         }
-                        if(flag === true){
-                            results.push(`${item.firstName}`)
-                            console.log(`${item.firstName} ${item.lastName}`);
-                        }
-                        console.log(results);
-                        if(results.length === item.tags.length){
-                            return results;
-                        } else {
-                            return ['not found'];
-                        }
+                        return results;
                     });
                 }
-                //If NO Send Type 
-                updateSent(true);
-                updateRecipients(sendTo);
             }
         })
         .catch(function (error) {
             // handle error
             console.log(error);
         })
-        .then(function () {
+        .then(function (results) {
             // always executed
+            updateSent(true);
+                updateRecipients(sendTo);
+            console.log('boom');
         });
-        // Check Send Type
-
     }
-
     return (
         <div>
             <form onSubmit={handleSubmit} style={{textAlign: "left"}}>
