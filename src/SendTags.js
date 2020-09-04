@@ -1,6 +1,9 @@
 import React, {useState} from 'react'
+import axios from 'axios';
+ 
+// GET Request for sample data
 
-export default function SendTags () {
+export default function SendTags (data) {
     const [recipients, updateRecipients] = useState("")
     const [qualifier, updateQualifier] = useState("")
     const [sendTo, updateSendTo] = useState("")
@@ -26,9 +29,47 @@ export default function SendTags () {
 
     const handleSubmit = (event) => {
         event.preventDefault()
-        /*  implement me
-            hint: we will probably need to update state here to render the right parts
-        */
+        axios.get('https://sheetdb.io/api/v1/aka2sv6jd00dh')
+        .then(function (response) {
+            if(sendType === 'Tags'){
+                if(qualifier === 'AND'){
+                    let comparator = sendTo.split(',');
+                    console.log(comparator, 'comparator')
+                    return response.data.map(item=>{
+                        let results = [];
+                        let temp = item.tags.split(',');
+                        let flag = false;
+                        for(let i = 0; i < comparator.length; i++){
+                            if(temp.includes(comparator[i])){
+                                flag = true
+                            }
+                        }
+                        if(flag === true){
+                            results.push(`${item.firstName}`)
+                            console.log(`${item.firstName} ${item.lastName}`);
+                        }
+                        console.log(results);
+                        if(results.length === item.tags.length){
+                            return results;
+                        } else {
+                            return ['not found'];
+                        }
+                    });
+                }
+                //If NO Send Type 
+                updateSent(true);
+                updateRecipients(sendTo);
+            }
+        })
+        .catch(function (error) {
+            // handle error
+            console.log(error);
+        })
+        .then(function () {
+            // always executed
+        });
+        // Check Send Type
+
     }
 
     return (
